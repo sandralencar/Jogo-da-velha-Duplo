@@ -1,0 +1,253 @@
+
+algoritmo "JogoDaVelhaDuplo"
+
+var
+   maior, menor: vetor[1..9] de caractere
+   casa, pos, i, k, a, jogadas, ocupadas: inteiro
+   vez, primeiro, vencedor, campeao: caractere
+   ganhou, terminou, valido: logico
+
+inicio
+   para i de 1 ate 9 faca
+      maior[i] <- " "
+   fimpara
+
+   vez <- "X"
+   campeao <- " "
+   terminou <- falso
+   ocupadas <- 0
+
+   escreval("====================================")
+   escreval("        JOGO DA VELHA DUPLO")
+   escreval("====================================")
+   escreval("")
+   escreval("COMO JOGAR:")
+   escreval("1. Existem 9 casas no tabuleiro maior.")
+   escreval("2. Cada casa possui outro jogo da velha.")
+   escreval("3. Quem vencer o jogo menor conquista a casa.")
+   escreval("4. Quem escolhe a casa comeca jogando.")
+   escreval("5. A escolha alterna entre X e O a cada rodada.")
+   escreval("6. Se empatar, a casa continua vazia.")
+   escreval("7. Ganha quem alinhar 3 casas no maior.")
+   escreval("")
+
+   enquanto nao terminou faca
+
+      escreval("")
+      escreval("===== TABULEIRO PRINCIPAL =====")
+
+      para i de 1 ate 9 faca
+         se maior[i] = " " entao
+            escreva("[", i, "] ")
+         senao
+            escreva("[", maior[i], "] ")
+         fimse
+
+         se i mod 3 = 0 entao
+            escreval("")
+         fimse
+      fimpara
+
+      repita
+         escreval("")
+         escreva("Jogador ", vez, ", escolha uma casa: ")
+         leia(casa)
+
+         valido <- falso
+
+         se (casa >= 1) e (casa <= 9) entao
+            se maior[casa] = " " entao
+               valido <- verdadeiro
+            fimse
+         fimse
+
+         se nao valido entao
+            escreval("Casa invalida ou ja conquistada!")
+         fimse
+
+      ate valido
+
+      escreval("")
+      escreval("====================================")
+      escreval("          CASA ", casa, " ESCOLHIDA")
+      escreval("====================================")
+      escreval("O jogador ", vez, " escolheu a casa ", casa)
+      escreval("do tabuleiro principal.")
+      escreval("")
+      escreval("Agora X e O vao disputar um jogo")
+      escreval("da velha dentro dessa casa.")
+      escreval("")
+      escreval("Quem vencer conquista a CASA ", casa, ".")
+      escreval("Se empatar, ela continua vazia.")
+      escreval("")
+      escreval("POSICOES DO TABULEIRO MENOR:")
+      escreval("[1] [2] [3]")
+      escreval("[4] [5] [6]")
+      escreval("[7] [8] [9]")
+      escreval("")
+
+      primeiro <- vez
+      vencedor <- " "
+      jogadas <- 0
+      ganhou <- falso
+
+      para i de 1 ate 9 faca
+         menor[i] <- " "
+      fimpara
+
+      enquanto (nao ganhou) e (jogadas < 9) faca
+
+         escreval("")
+         escreval("===== JOGO MENOR - CASA ", casa, " =====")
+
+         para i de 1 ate 9 faca
+            se menor[i] = " " entao
+               escreva("[", i, "] ")
+            senao
+               escreva("[", menor[i], "] ")
+            fimse
+
+            se i mod 3 = 0 entao
+               escreval("")
+            fimse
+         fimpara
+
+         repita
+            escreva("Jogador ", vez, ", escolha a posicao: ")
+            leia(pos)
+
+            valido <- falso
+
+            se (pos >= 1) e (pos <= 9) entao
+               se menor[pos] = " " entao
+                  valido <- verdadeiro
+               fimse
+            fimse
+
+            se nao valido entao
+               escreval("Posicao invalida ou ocupada!")
+            fimse
+
+         ate valido
+
+         menor[pos] <- vez
+         jogadas <- jogadas + 1
+
+         para k de 1 ate 3 faca
+            a <- (k - 1) * 3 + 1
+
+            se (menor[a] = vez) e (menor[a+1] = vez) e (menor[a+2] = vez) entao
+               ganhou <- verdadeiro
+            fimse
+
+            se (menor[k] = vez) e (menor[k+3] = vez) e (menor[k+6] = vez) entao
+               ganhou <- verdadeiro
+            fimse
+         fimpara
+
+         se (menor[1] = vez) e (menor[5] = vez) e (menor[9] = vez) entao
+            ganhou <- verdadeiro
+         fimse
+
+         se (menor[3] = vez) e (menor[5] = vez) e (menor[7] = vez) entao
+            ganhou <- verdadeiro
+         fimse
+
+         se ganhou entao
+            vencedor <- vez
+         senao
+            se vez = "X" entao
+               vez <- "O"
+            senao
+               vez <- "X"
+            fimse
+         fimse
+
+      fimenquanto
+
+      escreval("")
+      escreval("===== RESULTADO DA CASA ", casa, " =====")
+
+      se ganhou entao
+
+         maior[casa] <- vencedor
+         ocupadas <- ocupadas + 1
+
+         escreval("Jogador ", vencedor, " venceu!")
+         escreval("A CASA ", casa, " agora pertence a ", vencedor, ".")
+
+         para k de 1 ate 3 faca
+            a <- (k - 1) * 3 + 1
+
+            se (maior[a] = vencedor) e (maior[a+1] = vencedor) e (maior[a+2] = vencedor) entao
+               terminou <- verdadeiro
+            fimse
+
+            se (maior[k] = vencedor) e (maior[k+3] = vencedor) e (maior[k+6] = vencedor) entao
+               terminou <- verdadeiro
+            fimse
+         fimpara
+
+         se (maior[1] = vencedor) e (maior[5] = vencedor) e (maior[9] = vencedor) entao
+            terminou <- verdadeiro
+         fimse
+
+         se (maior[3] = vencedor) e (maior[5] = vencedor) e (maior[7] = vencedor) entao
+            terminou <- verdadeiro
+         fimse
+
+         se terminou entao
+            campeao <- vencedor
+         fimse
+
+      senao
+
+         escreval("EMPATE! Ninguem conquistou a casa.")
+         escreval("A CASA ", casa, " continua disponivel.")
+
+      fimse
+
+      // Alternancia obrigatoria entre os jogadores
+      se primeiro = "X" entao
+         vez <- "O"
+      senao
+         vez <- "X"
+      fimse
+
+      se nao terminou entao
+         escreval("O jogador ", vez, " escolhe e comeca a proxima.")
+      fimse
+
+      se ocupadas = 9 entao
+         terminou <- verdadeiro
+      fimse
+
+   fimenquanto
+
+   escreval("")
+   escreval("====================================")
+   escreval("        TABULEIRO FINAL")
+   escreval("====================================")
+
+   para i de 1 ate 9 faca
+      se maior[i] = " " entao
+         escreva("[ ] ")
+      senao
+         escreva("[", maior[i], "] ")
+      fimse
+
+      se i mod 3 = 0 entao
+         escreval("")
+      fimse
+   fimpara
+
+   escreval("")
+   se campeao <> " " entao
+      escreval("PARABENS! JOGADOR ", campeao, " VENCEU!")
+   senao
+      escreval("EMPATE GERAL! NINGUEM VENCEU.")
+   fimse
+
+   escreval("FIM DO JOGO!")
+
+fimalgoritmo
